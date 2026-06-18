@@ -1,56 +1,76 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using KomuNect.Data; // Ensure this points to where your ApplicationDbContext is
+using BCrypt.Net;
 
-namespace KomuNect.Controllers;
-
-public class AuthController : Controller
+namespace KomuNect.Controllers
 {
-    // 1. Role Selection Page
-    [HttpGet]
-    public IActionResult RoleSelection(string mode = "login")
+    public class AuthController : Controller
     {
-        ViewBag.Mode = mode;
-        return View();
-    }
+        private readonly ApplicationDbContext _dbContext;
 
-    [HttpGet]
-    public IActionResult Login(string role = "resident")
-    {
-        ViewBag.Role = role;
-        return View();
-    }
-
-    [HttpGet]
-    public IActionResult Signup(string role = "resident")
-    {
-        ViewBag.Role = role;
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Login(string Email, string Password, string Role)
-    {
-        bool isPasswordCorrect = true;
-
-        if (!isPasswordCorrect)
+        // 1. Inject the Database into the Controller
+        public AuthController(ApplicationDbContext dbContext)
         {
-            ModelState.AddModelError(string.Empty, "Invalid email or password. Please try again.");
-            ViewBag.Role = Role;
+            _dbContext = dbContext;
+        }
+
+        [HttpGet]
+        public IActionResult RoleSelection(string mode = "login")
+        {
+            ViewBag.Mode = mode;
             return View();
         }
 
-        if (Role == "admin")
+        [HttpGet]
+        public IActionResult Login(string role = "resident")
         {
-            HttpContext.Session.SetInt32("AdminId", 1);
-
-            return RedirectToAction("List", "Announcements");
+            ViewBag.Role = role;
+            return View();
         }
-        else
-        {
-            HttpContext.Session.SetInt32("ResidentId", 1);
 
-            return RedirectToAction("List", "Complaints");
+        [HttpGet]
+        public IActionResult Signup(string role = "resident")
+        {
+            ViewBag.Role = role;
+            return View();
+        }
+
+        // 2. Renamed 'Email' to 'Identifier' so it can accept either an Email OR an Admin ID
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string Identifier, string Password, string Role)
+        {
+            if (Role == "admin")
+            {
+                // ADMIN LOGIN: Look up by AdminId instead of Email
+                var admin = await _dbContext.Admins.FirstOrDefaultAsync(a => a.AdminId == Identifier);
+
+                // Verify the hashed password
+                if (admin != null && BCrypt.Net.BCrypt.Verify(Password, admin.PasswordHash))
+                {
+                    HttpContext.Session.SetInt32("AdminId", admin.Id);
+                    return RedirectToAction("List", "Announcements");
+                }
+            }
+            else
+            {
+                // RESIDENT LOGIN: Look up by Email
+                var resident = await _dbContext.Residents.FirstOrDefaultAsync(r => r.Email == Identifier);
+
+                // Verify the hashed password
+                if (resident != null && BCrypt.Net.BCrypt.Verify(Password, resident.PasswordHash))
+                {
+                    HttpContext.Session.SetInt32("ResidentId", resident.Id);
+                    return RedirectToAction("List", "Complaints");
+                }
+            }
+
+            // If we get here, the login failed
+            ModelState.AddModelError(string.Empty, "Invalid credentials. Please try again.");
+            ViewBag.Role = Role;
+            return View();
         }
     }
 }

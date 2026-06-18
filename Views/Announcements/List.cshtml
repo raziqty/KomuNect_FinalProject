@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KomuNect.Models.Announcement>
+﻿@model IEnumerable<KomuNect.Models.Entities.Announcement>
 @{
     ViewData["Title"] = "Barangay Announcements";
     string role = ViewBag.Role ?? "resident";
@@ -69,9 +69,9 @@
                                 {
                                     <p class="text-xs text-gray-600 mb-1"><i class="fa-regular fa-calendar text-[#2D7DA5] mr-2 w-4"></i> <strong>Date:</strong> @item.EventDate.Value.ToString("MMMM dd, yyyy")</p>
                                 }
-                                @if (!string.IsNullOrEmpty(item.Location))
+                                @if (!string.IsNullOrEmpty(item.EventLocation))
                                 {
-                                    <p class="text-xs text-gray-600"><i class="fa-solid fa-location-dot text-[#2D7DA5] mr-2 w-4"></i> <strong>Location:</strong> @item.Location</p>
+                                    <p class="text-xs text-gray-600"><i class="fa-solid fa-location-dot text-[#2D7DA5] mr-2 w-4"></i> <strong>Location:</strong> @item.EventLocation</p>
                                 }
                             </div>
 
