@@ -1,11 +1,11 @@
-﻿using KomuNect_Demo.Data;
-using KomuNect_Demo.Models.Entities;
-using KomuNect_Demo.Models.ViewModels;
+﻿using KomuNect.Data;
+using KomuNect.Models.Entities;
+using KomuNect.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace KomuNect_Demo.Controllers
+namespace KomuNect.Controllers
 {
     public class ComplaintsController : Controller
     {

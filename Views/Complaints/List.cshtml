@@ -1,0 +1,121 @@
+﻿@using Microsoft.AspNetCore.Http
+@model IEnumerable<KomuNect_Demo.Models.Entities.Complaint>
+@{
+    ViewData["Title"] = "Complaints Dashboard";
+
+    // Check the session to see who is currently viewing the page
+    bool isAdmin = Context.Session.GetInt32("AdminId").HasValue;
+    bool isResident = Context.Session.GetInt32("ResidentId").HasValue;
+}
+
+<div class="p-8 max-w-5xl mx-auto min-h-screen">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
+        <div>
+            @if (isAdmin)
+            {
+                <h1 class="text-3xl font-black text-red-700 italic tracking-tight">Resident <span class="text-gray-800">Complaints</span></h1>
+                <p class="text-gray-500 text-sm mt-1">Review and manage community concerns.</p>
+            }
+            else
+            {
+                <h1 class="text-3xl font-black text-red-700 italic tracking-tight">My <span class="text-gray-800">Complaints</span></h1>
+                <p class="text-gray-500 text-sm mt-1">Track the status of the concerns you have filed.</p>
+            }
+        </div>
+
+        <!-- RESIDENT ONLY: File New Complaint Button -->
+        @if (isResident && !isAdmin)
+        {
+            <a href="/Complaints/Add" class="bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-red-800 transition flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> File a Concern
+            </a>
+        }
+    </div>
+
+    <!-- COMPLAINT LIST -->
+    <div class="space-y-6">
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
+                <i class="fa-regular fa-folder-open text-4xl text-gray-300 mb-3"></i>
+                <p class="text-gray-500 font-medium">No complaints have been filed yet.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                // Determine the badge styling based on the enum status
+                string badgeClass = item.Status switch
+                {
+                    KomuNect_Demo.Models.Entities.ComplaintStatus.Pending => "bg-yellow-100 text-yellow-800 border-yellow-200",
+                    KomuNect_Demo.Models.Entities.ComplaintStatus.Action => "bg-blue-100 text-blue-800 border-blue-200",
+                    KomuNect_Demo.Models.Entities.ComplaintStatus.Resolved => "bg-green-100 text-green-800 border-green-200",
+                    _ => "bg-gray-100 text-gray-800 border-gray-200"
+                };
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 relative group">
+
+                    <!-- ADMIN ONLY: Edit/Delete Controls -->
+                    @if (isAdmin)
+                    {
+                        <div class="absolute top-4 right-4 flex gap-2">
+                            <a href="/Complaints/Edit/@item.Id" class="bg-gray-100 text-gray-700 px-3 py-1.5 text-xs font-bold rounded border border-gray-200 hover:bg-gray-200 transition" title="Update Status">
+                                Update Status
+                            </a>
+                            <form action="/Complaints/Delete/@item.Id" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this record?');">
+                                <button type="submit" class="bg-red-50 text-red-600 px-2 py-1.5 rounded border border-red-100 hover:bg-red-100 transition" title="Delete">
+                                    <i class="fa-solid fa-trash text-xs"></i>
+                                </button>
+                            </form>
+                        </div>
+                    }
+
+                    <div class="p-6">
+                        <!-- Header & Status Badge -->
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="px-3 py-1 text-xs font-black uppercase tracking-wider rounded-full border @badgeClass">
+                                @item.Status.ToString()
+                            </span>
+                            <h2 class="text-lg font-bold text-gray-800">@item.Subject.SubjectName</h2>
+                        </div>
+
+                        <!-- Complaint Details -->
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-4">
+                            <p class="text-gray-700 text-sm whitespace-pre-line">@item.Details</p>
+                        </div>
+
+                        <!-- Admin Note Box (Only shows if the admin actually wrote something) -->
+                        @if (!string.IsNullOrEmpty(item.AdminNote))
+                        {
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded-r-lg">
+                                <p class="text-xs font-bold text-blue-800 uppercase tracking-wide mb-1">Response from Admin</p>
+                                <p class="text-sm text-blue-900 italic">"@item.AdminNote"</p>
+                            </div>
+                        }
+
+                        <!-- Footer Details -->
+                        <div class="flex flex-col md:flex-row justify-between text-xs text-gray-500 border-t border-gray-100 pt-3 mt-2">
+                            <div>
+                                @if (isAdmin)
+                                {
+                                    <p><strong>Filed By:</strong> Resident #@item.ResidentId</p>
+                                }
+                            </div>
+                            <div class="md:text-right mt-2 md:mt-0">
+                                <p><strong>Filed:</strong> @item.FiledAt.ToLocalTime().ToString("MMM dd, yyyy - hh:mm tt")</p>
+                                @if (item.UpdatedAt > item.FiledAt)
+                                {
+                                    <p class="italic text-[10px] mt-0.5">Last updated: @item.UpdatedAt.ToLocalTime().ToString("MMM dd, yyyy - hh:mm tt")</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

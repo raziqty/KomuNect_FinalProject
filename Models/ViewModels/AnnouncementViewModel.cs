@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace KomuNect_Demo.Models.ViewModels
+namespace KomuNect.Models.ViewModels
 {
     public class AddAnnouncementViewModel
     {

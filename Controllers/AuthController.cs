@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KomuNect.Controllers;
 
@@ -30,23 +31,26 @@ public class AuthController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Login(string Email, string Password, string Role)
     {
-        bool isPasswordCorrect = false; 
+        bool isPasswordCorrect = true;
 
         if (!isPasswordCorrect)
         {
             ModelState.AddModelError(string.Empty, "Invalid email or password. Please try again.");
-
             ViewBag.Role = Role;
             return View();
         }
 
         if (Role == "admin")
         {
-            return RedirectToAction("Index", "Announcement");
+            HttpContext.Session.SetInt32("AdminId", 1);
+
+            return RedirectToAction("List", "Announcements");
         }
         else
         {
-            return RedirectToAction("Index", "Announcement");
+            HttpContext.Session.SetInt32("ResidentId", 1);
+
+            return RedirectToAction("List", "Complaints");
         }
     }
 }
