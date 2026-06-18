@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace KomuNect_Demo.Models.ViewModels
+namespace KomuNect.Models.ViewModels
 {
     public class AddResidentViewModel
     {

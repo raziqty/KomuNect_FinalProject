@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using KomuNect_Demo.Models.Entities;
+using KomuNect.Models.Entities;
 
-namespace KomuNect_Demo.Data
+namespace KomuNect.Data
 {
     public class ApplicationDbContext : DbContext
     {

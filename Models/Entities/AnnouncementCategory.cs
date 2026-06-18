@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KomuNect_Demo.Models.Entities
+namespace KomuNect.Models.Entities
 {
     [Table("announcement_categories")]
     public class AnnouncementCategory

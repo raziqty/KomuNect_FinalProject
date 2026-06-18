@@ -1,5 +1,5 @@
-using KomuNect_Demo.Data;
-using KomuNect_Demo.Models.Entities;
+using KomuNect.Data;
+using KomuNect.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

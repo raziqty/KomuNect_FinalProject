@@ -1,9 +1,9 @@
-using KomuNect_Demo.Data;
-using KomuNect_Demo.Models.ViewModels;
+using KomuNect.Data;
+using KomuNect.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace KomuNect_Demo.Controllers
+namespace KomuNect.Controllers
 {
     public class AdminController : Controller
     {

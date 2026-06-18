@@ -1,8 +1,8 @@
-﻿using KomuNect_Demo.Models.Entities;
+﻿using KomuNect.Models.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace KomuNect_Demo.Models.ViewModels
+namespace KomuNect.Models.ViewModels
 {
     public class AddComplaintViewModel
     {
