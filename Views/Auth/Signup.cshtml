@@ -1,0 +1,136 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<section class="min-h-screen bg-[#F0F8FF] flex items-center justify-center p-4 py-12">
+
+    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-5xl w-full flex flex-col md:flex-row border border-[#003B5A]/10">
+
+        <div class="hidden md:flex w-1/3 bg-[#003B5A] p-12 text-white flex-col justify-between relative overflow-hidden">
+            <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#2D7DA5] rounded-full opacity-20 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="relative z-10">
+                <div class="mb-6">
+                    <h1 class="font-sans font-black italic tracking-tighter text-4xl text-white leading-none">
+                        Komu<span class="text-[#C1E7FF]">Nect</span>
+                    </h1>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C1E7FF] opacity-80 mt-1">
+                        Resident Registration
+                    </p>
+                </div>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    Please ensure all details match your valid ID for faster verification.
+                </p>
+            </div>
+            <div class="text-xs text-[#C1E7FF]/50 relative z-10 mt-12">&copy; @DateTime.Now.Year KomuNect System</div>
+        </div>
+
+        <div class="w-full md:w-2/3 p-8 md:p-12 overflow-y-auto max-h-[90vh]">
+
+            <div class="text-center md:text-left mb-8">
+                <h2 class="text-[#003B5A] text-2xl font-bold">Resident Details</h2>
+                <p class="text-gray-400 text-sm mt-1">Fill in the information below.</p>
+
+                <div asp-validation-summary="All" class="text-red-500 text-xs font-bold mt-2"></div>
+            </div>
+
+            <form action="/Auth/Signup" method="POST" class="space-y-5">
+                @Html.AntiForgeryToken()
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 italic mb-1">First Name</label>
+                        <input type="text" name="FirstName" required class="w-full px-4 py-3 rounded-lg bg-white border border-[#003B5A]/30 focus:border-[#003B5A] text-sm outline-none transition text-[#003B5A]" placeholder="e.g. Juan">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 italic mb-1">
+                            Middle Name <span class="font-normal opacity-60 text-[10px]">(Optional)</span>
+                        </label>
+                        <input type="text" name="MiddleName" class="w-full px-4 py-3 rounded-lg bg-white border border-[#003B5A]/30 focus:border-[#003B5A] text-sm outline-none transition text-[#003B5A]" placeholder="e.g. Santos">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 italic mb-1">Last Name</label>
+                        <input type="text" name="LastName" required class="w-full px-4 py-3 rounded-lg bg-white border border-[#003B5A]/30 focus:border-[#003B5A] text-sm outline-none transition text-[#003B5A]" placeholder="e.g. Dela Cruz">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 italic mb-1">Date of Birth</label>
+                    <input type="date" name="Birthdate" required class="w-full px-4 py-3 rounded-lg bg-white border border-[#003B5A]/30 focus:border-[#003B5A] text-sm outline-none transition text-[#003B5A]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 italic mb-1">Contact Number</label>
+                    <input type="tel" name="ContactNumber" required class="w-full px-4 py-3 rounded-lg bg-white border border-[#003B5A]/30 focus:border-[#003B5A] text-sm outline-none transition text-[#003B5A]" placeholder="0912 345 6789">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 italic mb-1">Email</label>
+                    <input type="email" name="Email" required class="w-full px-4 py-3 rounded-lg bg-white border border-[#003B5A]/30 focus:border-[#003B5A] text-sm outline-none transition text-[#003B5A]" placeholder="example@email.com">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 italic mb-1">Full Address</label>
+                    <input type="text" name="Address" required class="w-full px-4 py-3 rounded-lg bg-white border border-[#003B5A]/30 focus:border-[#003B5A] text-sm outline-none transition text-[#003B5A]" placeholder="House No., Street, Purok, Barangay">
+                </div>
+
+                <div class="pt-4 border-t border-gray-100 mt-4">
+                    <h3 class="text-xs font-bold text-[#003B5A] uppercase tracking-wider mb-4">Set Password</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div class="relative">
+                            <input type="password" name="Password" id="regPassword" required class="w-full px-4 py-3 pr-10 rounded-lg bg-gray-50 border border-gray-200 focus:border-[#003B5A] text-sm outline-none transition" placeholder="Password (Min 8 chars)">
+                            <button type="button" onclick="togglePassword('regPassword', 'regPassIcon')" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-[#003B5A] focus:outline-none">
+                                <svg id="regPassIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="relative">
+                            <input type="password" name="ConfirmPassword" id="regConfirm" required class="w-full px-4 py-3 pr-10 rounded-lg bg-gray-50 border border-gray-200 focus:border-[#003B5A] text-sm outline-none transition" placeholder="Confirm Password">
+                            <button type="button" onclick="togglePassword('regConfirm', 'regConfirmIcon')" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-[#003B5A] focus:outline-none">
+                                <svg id="regConfirmIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-[#003B5A] text-white font-bold py-3 rounded-lg shadow-lg hover:bg-[#2D7DA5] transition transform hover:-translate-y-0.5 uppercase tracking-wider text-sm">
+                        Register Resident
+                    </button>
+                </div>
+
+            </form>
+
+            <div class="mt-6 text-center">
+                <a href="/Auth/Login" class="text-xs text-gray-400 hover:text-[#003B5A] transition flex items-center justify-center space-x-1">
+                    <span>Already have an account?</span>
+                    <span class="font-bold underline">Login here</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.style.color = "#003B5A";
+        } else {
+            input.type = "password";
+            icon.style.color = "";
+        }
+    }
+</script>

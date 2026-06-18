@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+}
+
+<section class="min-h-screen relative flex flex-col items-center justify-center text-white p-6 bg-cover bg-center"
+         style="background-image: url('/images/barangay.jpg');">
+
+    <div class="absolute inset-0 bg-[#003B5A]/80 z-0"></div>
+
+    <div class="text-center relative z-10">
+        <img src="/images/Logo.jpg" alt="KomuNect Logo" class="w-24 h-24 mx-auto mb-6 rounded-full shadow-lg border-2 border-white/20">
+
+        <h1 class="font-sans font-black italic tracking-tighter text-6xl mb-4">
+            Komu<span class="text-[#C1E7FF]">Nect</span>
+        </h1>
+        <p class="text-lg text-blue-100 mb-8 max-w-lg mx-auto drop-shadow-md">
+            Your centralized barangay portal for secure complaint filing and community announcements.
+        </p>
+
+        <div class="flex gap-4 justify-center">
+            <a href="/Auth/RoleSelection?mode =login" class="bg-white text-[#003B5A] font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-100 transition transform hover:-translate-y-1">
+                Login
+            </a>
+            <a href="/Auth/RoleSelection?mode=register" class="bg-transparent border-2 border-[#C1E7FF] text-[#C1E7FF] font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-[#C1E7FF] hover:text-[#003B5A] transition transform hover:-translate-y-1">
+                Register
+            </a>
+        </div>
+    </div>
+</section>
