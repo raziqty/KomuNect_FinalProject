@@ -42,11 +42,11 @@ public class AuthController : Controller
 
         if (Role == "admin")
         {
-            return RedirectToAction("Index", "Admin");
+            return RedirectToAction("Index", "Announcement");
         }
         else
         {
-            return RedirectToAction("Index", "Resident");
+            return RedirectToAction("Index", "Announcement");
         }
     }
 }
