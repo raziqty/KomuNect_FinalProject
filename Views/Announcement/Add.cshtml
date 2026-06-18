@@ -1,0 +1,56 @@
+﻿@model KomuNect_Demo.Models.ViewModels.AddAnnouncementViewModel
+@{
+    ViewData["Title"] = "Post Announcement";
+}
+
+<div class="p-8 max-w-3xl mx-auto min-h-screen">
+
+    <div class="mb-6">
+        <a href="/Announcements/List" class="text-sm text-gray-500 hover:text-[#003B5A] transition">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Back to Announcements
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+        <h2 class="text-2xl font-bold text-[#003B5A] mb-6">Create New Announcement</h2>
+
+        <div asp-validation-summary="All" class="text-red-500 text-xs font-bold mb-4 empty:hidden"></div>
+
+        <form asp-controller="Announcements" asp-action="Add" method="POST" class="space-y-5">
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-1">Announcement Title <span class="text-red-500">*</span></label>
+                <input asp-for="Title" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#003B5A] focus:ring-1 focus:ring-[#003B5A] outline-none transition">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-1">Category <span class="text-red-500">*</span></label>
+                <select asp-for="CategoryId" asp-items="Model.Categories" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#003B5A] focus:ring-1 focus:ring-[#003B5A] outline-none transition bg-white cursor-pointer">
+                    <option value="">-- Select a Category --</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-1">Details / Content <span class="text-red-500">*</span></label>
+                <textarea asp-for="Content" rows="6" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#003B5A] focus:ring-1 focus:ring-[#003B5A] outline-none transition" placeholder="Write the full details here..."></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#F0F8FF] p-4 rounded-lg border border-[#C1E7FF]">
+                <div>
+                    <label class="block text-xs font-bold text-[#003B5A] mb-1">Event Date (Optional)</label>
+                    <input asp-for="EventDate" type="date" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-[#003B5A] outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-[#003B5A] mb-1">Location (Optional)</label>
+                    <input asp-for="EventLocation" type="text" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-[#003B5A] outline-none text-sm" placeholder="e.g. Barangay Hall">
+                </div>
+            </div>
+
+            <div class="pt-4 mt-2 border-t border-gray-100 flex justify-end">
+                <button type="submit" class="bg-[#003B5A] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#2D7DA5] transition">
+                    Post Announcement
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
