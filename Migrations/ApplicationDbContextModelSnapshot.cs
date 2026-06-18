@@ -22,7 +22,7 @@ namespace KomuNect.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.Admin", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.Admin", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace KomuNect.Migrations
                     b.ToTable("admins");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.Announcement", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.Announcement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -118,7 +118,7 @@ namespace KomuNect.Migrations
                     b.ToTable("announcements");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.AnnouncementCategory", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.AnnouncementCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,7 +168,7 @@ namespace KomuNect.Migrations
                         });
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.Complaint", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.Complaint", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -216,7 +216,7 @@ namespace KomuNect.Migrations
                     b.ToTable("complaints");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.ComplaintSubject", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.ComplaintSubject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -266,7 +266,7 @@ namespace KomuNect.Migrations
                         });
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.Resident", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.Resident", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -331,15 +331,15 @@ namespace KomuNect.Migrations
                     b.ToTable("residents");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.Announcement", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.Announcement", b =>
                 {
-                    b.HasOne("KomuNect_Demo.Models.Entities.Admin", "Author")
+                    b.HasOne("KomuNect.Models.Entities.Admin", "Author")
                         .WithMany("Announcements")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KomuNect_Demo.Models.Entities.AnnouncementCategory", "Category")
+                    b.HasOne("KomuNect.Models.Entities.AnnouncementCategory", "Category")
                         .WithMany("Announcements")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -350,15 +350,15 @@ namespace KomuNect.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.Complaint", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.Complaint", b =>
                 {
-                    b.HasOne("KomuNect_Demo.Models.Entities.Resident", "Resident")
+                    b.HasOne("KomuNect.Models.Entities.Resident", "Resident")
                         .WithMany("Complaints")
                         .HasForeignKey("ResidentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KomuNect_Demo.Models.Entities.ComplaintSubject", "Subject")
+                    b.HasOne("KomuNect.Models.Entities.ComplaintSubject", "Subject")
                         .WithMany("Complaints")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -369,22 +369,22 @@ namespace KomuNect.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.Admin", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.Admin", b =>
                 {
                     b.Navigation("Announcements");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.AnnouncementCategory", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.AnnouncementCategory", b =>
                 {
                     b.Navigation("Announcements");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.ComplaintSubject", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.ComplaintSubject", b =>
                 {
                     b.Navigation("Complaints");
                 });
 
-            modelBuilder.Entity("KomuNect_Demo.Models.Entities.Resident", b =>
+            modelBuilder.Entity("KomuNect.Models.Entities.Resident", b =>
                 {
                     b.Navigation("Complaints");
                 });
