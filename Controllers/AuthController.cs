@@ -41,57 +41,63 @@ namespace KomuNect.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            // This physically destroys the AdminId and ResidentId from the server memory!
             HttpContext.Session.Clear();
 
-            // Now that they have no memory, send them back to the start
             return RedirectToAction("Index", "Home");
         }
 
-        // 2. Renamed 'Email' to 'Identifier' so it can accept either an Email OR an Admin ID
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string Identifier, string Password, string Role)
+        public async Task<IActionResult> Login(string LoginIdentifier, string Password)
         {
-            if (Role == "admin")
+            if (string.IsNullOrEmpty(LoginIdentifier) || string.IsNullOrEmpty(Password))
             {
-                // ADMIN LOGIN: Look up by AdminId instead of Email
-                var admin = await _dbContext.Admins.FirstOrDefaultAsync(a => a.AdminId == Identifier);
+                ModelState.AddModelError(string.Empty, "Please enter your login details.");
+                return View();
+            }
 
-                // Verify the hashed password
-                if (admin != null && BCrypt.Net.BCrypt.Verify(Password, admin.PasswordHash))
-                {
-                    HttpContext.Session.SetInt32("AdminId", admin.Id);
-                    return RedirectToAction("List", "Announcements");
-                }
+            Admin adminUser = null;
+            if (int.TryParse(LoginIdentifier, out int parsedId))
+            {
+                adminUser = await _dbContext.Admins.FirstOrDefaultAsync(a => a.Id == parsedId || a.Username == LoginIdentifier);
             }
             else
             {
-                // RESIDENT LOGIN: Look up by Email
-                var resident = await _dbContext.Residents.FirstOrDefaultAsync(r => r.Email == Identifier);
-
-                // Verify the hashed password
-                if (resident != null && BCrypt.Net.BCrypt.Verify(Password, resident.PasswordHash))
-                {
-                    HttpContext.Session.SetInt32("ResidentId", resident.Id);
-                    return RedirectToAction("List", "Complaints");
-                }
+                adminUser = await _dbContext.Admins.FirstOrDefaultAsync(a => a.Username == LoginIdentifier);
             }
 
-            // If we get here, the login failed
-            ModelState.AddModelError(string.Empty, "Invalid credentials. Please try again.");
-            ViewBag.Role = Role;
+            if (adminUser != null && BCrypt.Net.BCrypt.Verify(Password, adminUser.PasswordHash))
+            {
+                HttpContext.Session.SetInt32("AdminId", adminUser.Id);
+                return RedirectToAction("List", "Announcements");
+            }
+
+            var residentUser = await _dbContext.Residents.FirstOrDefaultAsync(r => r.Email == LoginIdentifier);
+
+            if (residentUser != null && BCrypt.Net.BCrypt.Verify(Password, residentUser.PasswordHash))
+            {
+                HttpContext.Session.SetInt32("ResidentId", residentUser.Id);
+                return RedirectToAction("List", "Announcements");
+            }
+
+            ModelState.AddModelError(string.Empty, "Invalid login credentials.");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // Added MiddleName to the parameters here!
-        public async Task<IActionResult> Signup(string FirstName, string? MiddleName, string LastName, string Email, string Password, string Address, DateTime Birthdate)
+        public async Task<IActionResult> Signup(string FirstName, string? MiddleName, string LastName, string Email, string Password, string ConfirmPassword, string Address, DateTime Birthdate)
         {
-            if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
+            if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword))
             {
                 ModelState.AddModelError(string.Empty, "Please fill in all required fields.");
+                ViewBag.Role = "resident";
+                return View();
+            }
+
+            if (Password != ConfirmPassword)
+            {
+                ModelState.AddModelError(string.Empty, "Passwords do not match. Please try again.");
                 ViewBag.Role = "resident";
                 return View();
             }
@@ -109,7 +115,7 @@ namespace KomuNect.Controllers
             var newResident = new Resident
             {
                 FirstName = FirstName,
-                MiddleName = MiddleName, // Now it correctly grabs the middle name!
+                MiddleName = MiddleName,
                 LastName = LastName,
                 Email = Email,
                 PasswordHash = hashedPassword,
@@ -123,7 +129,7 @@ namespace KomuNect.Controllers
 
             HttpContext.Session.SetInt32("ResidentId", newResident.Id);
 
-            return RedirectToAction("List", "Complaints");
+            return RedirectToAction("List", "Announcements");
         }
     }
 }
