@@ -23,7 +23,6 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
 
-            <!-- 1. RESIDENT CARD (Always active) -->
             <a href="@routePrefix?role=resident" class="group relative bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-10 text-center transition-all duration-300 hover:bg-[#C1E7FF] hover:scale-105 hover:shadow-[0_0_40px_rgba(193,231,255,0.3)] cursor-pointer">
 
                 <div class="absolute top-0 left-0 right-0 -mt-3 flex justify-center">
@@ -51,11 +50,8 @@
                 </div>
             </a>
 
-
-            <!-- 2. ADMIN CARD (Conditional Logic) -->
             @if (currentMode == "register")
             {
-                <!-- DISABLED STATE (When Registering) -->
                 <div class="relative bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-10 text-center opacity-60 cursor-not-allowed">
 
                     <div class="absolute top-0 left-0 right-0 -mt-3 flex justify-center">
@@ -78,7 +74,6 @@
                         Manage resident database, process document requests, handle complaints, and update facilities.
                     </p>
 
-                    <!-- EXPLANATION NOTE -->
                     <div class="mt-6 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-xs font-medium">
                         <i class="fa-solid fa-lock mr-1"></i> Admin registration is restricted. Contact the Brgy. Secretary or IT Admin to create an account.
                     </div>
@@ -86,7 +81,6 @@
             }
             else
             {
-                <!-- ACTIVE STATE (When Logging In) -->
                 <a href="@routePrefix?role=admin" class="group relative bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-10 text-center transition-all duration-300 hover:bg-[#C1E7FF] hover:scale-105 hover:shadow-[0_0_40px_rgba(193,231,255,0.3)] cursor-pointer">
 
                     <div class="absolute top-0 left-0 right-0 -mt-3 flex justify-center">
