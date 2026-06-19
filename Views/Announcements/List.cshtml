@@ -81,10 +81,14 @@
                             </div>
 
                             <div class="md:text-right flex flex-col justify-end">
-                                <p class="text-[10px] text-gray-400 font-medium">Posted: @item.PostedAt.ToString("MMM dd, yyyy - hh:mm tt")</p>
+                                <p class="text-[10px] text-gray-400 font-medium">
+                                    Posted: @item.PostedAt.ToLocalTime().ToString("MMM dd, yyyy - hh:mm tt")
+                                </p>
                                 @if (item.EditedAt.HasValue)
                                 {
-                                    <p class="text-[10px] text-gray-400 font-medium italic mt-0.5">Edited: @item.EditedAt.Value.ToString("MMM dd, yyyy - hh:mm tt")</p>
+                                    <p class="text-[10px] text-gray-400 font-medium italic mt-0.5">
+                                        Edited: @item.EditedAt.Value.ToLocalTime().ToString("MMM dd, yyyy - hh:mm tt")
+                                    </p>
                                 }
                             </div>
                         </div>
