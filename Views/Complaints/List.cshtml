@@ -102,7 +102,12 @@
                             <div>
                                 @if (isAdmin)
                                 {
-                                    <p><strong>Filed By:</strong> Resident #@item.ResidentId</p>
+                                    <p>
+                                        <strong>Filed By:</strong>
+                                        @(item.Resident != null
+                                            ? $"{item.Resident.FirstName} {item.Resident.LastName}"
+                                            : $"Resident #{item.ResidentId}")
+                                    </p>
                                 }
                             </div>
                             <div class="md:text-right mt-2 md:mt-0">
