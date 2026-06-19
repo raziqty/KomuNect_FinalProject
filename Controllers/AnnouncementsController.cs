@@ -30,6 +30,9 @@ namespace KomuNect.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
+            // SECURITY: Kick out non-admins
+            if (!HttpContext.Session.GetInt32("AdminId").HasValue) return RedirectToAction("RoleSelection", "Auth");
+
             return View(new AddAnnouncementViewModel
             {
                 Categories = await GetCategorySelectList()
@@ -37,16 +40,17 @@ namespace KomuNect.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddAnnouncementViewModel viewModel)
         {
+            var authorId = HttpContext.Session.GetInt32("AdminId");
+            if (authorId is null) return RedirectToAction("RoleSelection", "Auth");
+
             if (!ModelState.IsValid)
             {
                 viewModel.Categories = await GetCategorySelectList();
                 return View(viewModel);
             }
-
-            var authorId = HttpContext.Session.GetInt32("AdminId");
-            if (authorId is null) return RedirectToAction("Login", "Admin");
 
             var announcement = new Announcement
             {
@@ -67,6 +71,8 @@ namespace KomuNect.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            if (!HttpContext.Session.GetInt32("AdminId").HasValue) return RedirectToAction("RoleSelection", "Auth");
+
             var announcement = await _dbContext.Announcements.FindAsync(id);
             if (announcement is null) return NotFound();
 
@@ -83,8 +89,11 @@ namespace KomuNect.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditAnnouncementViewModel viewModel)
         {
+            if (!HttpContext.Session.GetInt32("AdminId").HasValue) return RedirectToAction("RoleSelection", "Auth");
+
             if (!ModelState.IsValid)
             {
                 viewModel.Categories = await GetCategorySelectList();
@@ -106,9 +115,13 @@ namespace KomuNect.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var announcement = await _dbContext.Announcements.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            if (!HttpContext.Session.GetInt32("AdminId").HasValue) return RedirectToAction("RoleSelection", "Auth");
+
+            var announcement = await _dbContext.Announcements.FindAsync(id);
+
             if (announcement is not null)
             {
                 _dbContext.Announcements.Remove(announcement);
