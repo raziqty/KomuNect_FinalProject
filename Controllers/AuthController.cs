@@ -1,5 +1,5 @@
 ﻿using BCrypt.Net;
-using KomuNect.Data; // Ensure this points to where your ApplicationDbContext is
+using KomuNect.Data;
 using KomuNect.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,6 @@ namespace KomuNect.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
 
-        // 1. Inject the Database into the Controller
         public AuthController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
