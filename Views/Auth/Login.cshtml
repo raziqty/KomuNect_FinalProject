@@ -2,6 +2,9 @@
     ViewData["Title"] = "Login";
     string role = ViewBag.Role ?? "resident";
     string capitalizedRole = char.ToUpper(role[0]) + role.Substring(1);
+    string labelText = role == "admin" ? "Admin ID or Username" : "Email Address";
+    string placeholderText = role == "admin" ? "e.g. ad-0000 or admin_juan" : "e.g. juan@email.com";
+    string buttonText = role == "admin" ? "Login as Admin" : "Login as Resident";
 }
 
 <section class="min-h-screen bg-[#F0F8FF] flex items-center justify-center p-4">
@@ -55,14 +58,12 @@
             </div>
 
             <form action="/Auth/Login" method="POST" class="space-y-5">
+                <input type="hidden" name="Role" value="@role">
                 @Html.AntiForgeryToken()
 
-                <input type="hidden" name="Role" value="@role">
-
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">Email, Username, or Admin ID <span class="text-red-500">*</span></label>
-
-                    <input name="LoginIdentifier" type="text" required placeholder="e.g. juan@email.com or admin_juan" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#003B5A] focus:ring-1 focus:ring-[#003B5A] outline-none transition">
+                    <label class="block text-xs font-bold text-gray-500 mb-1">@labelText <span class="text-red-500">*</span></label>
+                    <input name="LoginIdentifier" type="text" required placeholder="@placeholderText" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#003B5A] focus:ring-1 focus:ring-[#003B5A] outline-none transition">
                 </div>
 
                 <div>
@@ -87,7 +88,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-[#003B5A] text-white font-bold py-3 rounded-lg shadow-lg hover:bg-[#2D7DA5] transition transform hover:-translate-y-0.5">
-                    Login as @capitalizedRole
+                    @buttonText
                 </button>
             </form>
 

@@ -47,39 +47,44 @@ namespace KomuNect.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string LoginIdentifier, string Password)
+        public async Task<IActionResult> Login(string LoginIdentifier, string Password, string Role)
         {
             if (string.IsNullOrEmpty(LoginIdentifier) || string.IsNullOrEmpty(Password))
             {
                 ModelState.AddModelError(string.Empty, "Please enter your login details.");
+                ViewBag.Role = Role;
                 return View();
             }
 
-            Admin adminUser = null;
-            if (int.TryParse(LoginIdentifier, out int parsedId))
-            {
-                adminUser = await _dbContext.Admins.FirstOrDefaultAsync(a => a.Id == parsedId || a.Username == LoginIdentifier);
-            }
-            else
-            {
-                adminUser = await _dbContext.Admins.FirstOrDefaultAsync(a => a.Username == LoginIdentifier);
-            }
+            var adminUser = await _dbContext.Admins.FirstOrDefaultAsync(a => a.AdminId == LoginIdentifier || a.Username == LoginIdentifier);
 
-            if (adminUser != null && BCrypt.Net.BCrypt.Verify(Password, adminUser.PasswordHash))
+            if (adminUser != null)
             {
-                HttpContext.Session.SetInt32("AdminId", adminUser.Id);
-                return RedirectToAction("List", "Announcements");
+                try
+                {
+                    if (BCrypt.Net.BCrypt.Verify(Password, adminUser.PasswordHash))
+                    {
+                        HttpContext.Session.SetInt32("AdminId", adminUser.Id);
+                        return RedirectToAction("List", "Announcements");
+                    }
+                }
+                catch { /* Fails silently and moves to Resident check */ }
             }
 
             var residentUser = await _dbContext.Residents.FirstOrDefaultAsync(r => r.Email == LoginIdentifier);
 
-            if (residentUser != null && BCrypt.Net.BCrypt.Verify(Password, residentUser.PasswordHash))
+            try
             {
-                HttpContext.Session.SetInt32("ResidentId", residentUser.Id);
-                return RedirectToAction("List", "Announcements");
+                if (residentUser != null && BCrypt.Net.BCrypt.Verify(Password, residentUser.PasswordHash))
+                {
+                    HttpContext.Session.SetInt32("ResidentId", residentUser.Id);
+                    return RedirectToAction("List", "Complaints");
+                }
             }
+            catch { /* Fails silently and moves to the error */ }
 
             ModelState.AddModelError(string.Empty, "Invalid login credentials.");
+            ViewBag.Role = Role;
             return View();
         }
 

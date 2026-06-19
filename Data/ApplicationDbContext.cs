@@ -73,7 +73,7 @@ namespace KomuNect.Data
         {
             var admins = new[]
             {
-                new { AdminId = "ad-0231", Username = "juandelacruz", Password = "wordpass333" },
+                new { AdminId = "ad-0231", Username = "juandelacruz", Password = BCrypt.Net.BCrypt.HashPassword("wordpass333") },
             };
 
             foreach (var a in admins)

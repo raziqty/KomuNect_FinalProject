@@ -3,14 +3,12 @@
 @{
     ViewData["Title"] = "Complaints Dashboard";
 
-    // Check the session to see who is currently viewing the page
     bool isAdmin = Context.Session.GetInt32("AdminId").HasValue;
     bool isResident = Context.Session.GetInt32("ResidentId").HasValue;
 }
 
 <div class="p-8 max-w-5xl mx-auto min-h-screen">
 
-    <!-- HEADER -->
     <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
         <div>
             @if (isAdmin)
@@ -25,7 +23,6 @@
             }
         </div>
 
-        <!-- RESIDENT ONLY: File New Complaint Button -->
         @if (isResident && !isAdmin)
         {
             <a href="/Complaints/Add" class="bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-red-800 transition flex items-center gap-2">
@@ -34,7 +31,6 @@
         }
     </div>
 
-    <!-- COMPLAINT LIST -->
     <div class="space-y-6">
 
         @if (Model == null || !Model.Any())
@@ -48,7 +44,6 @@
         {
             @foreach (var item in Model)
             {
-                // Determine the badge styling based on the enum status
                 string badgeClass = item.Status switch
                 {
                     KomuNect.Models.Entities.ComplaintStatus.Pending => "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -59,7 +54,6 @@
 
                 <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 relative group">
 
-                    <!-- ADMIN ONLY: Edit/Delete Controls -->
                     @if (isAdmin)
                     {
                         <div class="absolute top-4 right-4 flex gap-2">
@@ -75,7 +69,6 @@
                     }
 
                     <div class="p-6">
-                        <!-- Header & Status Badge -->
                         <div class="flex items-center gap-3 mb-4">
                             <span class="px-3 py-1 text-xs font-black uppercase tracking-wider rounded-full border @badgeClass">
                                 @item.Status.ToString()
@@ -83,12 +76,10 @@
                             <h2 class="text-lg font-bold text-gray-800">@item.Subject.SubjectName</h2>
                         </div>
 
-                        <!-- Complaint Details -->
                         <div class="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-4">
                             <p class="text-gray-700 text-sm whitespace-pre-line">@item.Details</p>
                         </div>
 
-                        <!-- Admin Note Box (Only shows if the admin actually wrote something) -->
                         @if (!string.IsNullOrEmpty(item.AdminNote))
                         {
                             <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded-r-lg">
@@ -97,7 +88,6 @@
                             </div>
                         }
 
-                        <!-- Footer Details -->
                         <div class="flex flex-col md:flex-row justify-between text-xs text-gray-500 border-t border-gray-100 pt-3 mt-2">
                             <div>
                                 @if (isAdmin)
