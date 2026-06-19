@@ -1,4 +1,6 @@
-﻿@model IEnumerable<KomuNect.Models.Entities.Announcement>
+﻿@using Microsoft.AspNetCore.Http
+
+@model IEnumerable<KomuNect.Models.Entities.Announcement>
 @{
     ViewData["Title"] = "Barangay Announcements";
     string role = ViewBag.Role ?? "resident";
@@ -6,16 +8,21 @@
 
 <div class="p-8 max-w-5xl mx-auto min-h-screen">
 
-    <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
+    <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+        <!-- Left Side: Title and Subtitle -->
         <div>
-            <h1 class="text-3xl font-black text-[#003B5A] italic tracking-tight">Community <span class="text-[#2D7DA5]">Announcements</span></h1>
+            <h1 class="text-3xl font-black italic text-[#003B5A]">Community <span class="text-[#4A90E2] font-medium">Announcements</span></h1>
             <p class="text-gray-500 text-sm mt-1">Stay updated with the latest barangay news and events.</p>
         </div>
 
-        @if (role == "admin")
+        <!-- Right Side: The VIP Admin Button -->
+        @if (Context.Session.GetInt32("AdminId").HasValue)
         {
-            <a href="/Announcement/Create" class="bg-[#003B5A] text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-[#2D7DA5] transition flex items-center gap-2">
-                <i class="fa-solid fa-plus"></i> Post Announcement
+            <a href="/Announcements/Add" class="bg-[#003B5A] hover:bg-[#002236] text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-200 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+                Post Announcement
             </a>
         }
     </div>
